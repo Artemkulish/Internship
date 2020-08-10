@@ -6,6 +6,12 @@
     jump: ACCEPT
   become: yes
 
+- name: Allow ICMP packets
+  iptables:
+    chain: INPUT
+    protocol: icmp
+    jump: ACCEPT
+
 - name: Open ports
   iptables:
     chain: INPUT
@@ -14,20 +20,10 @@
     jump: ACCEPT
   with_items:
     "{{allowed_ports}}"
-
-
-- name: Allow ICMP packets
-  iptables:
-    chain: INPUT
-    protocol: icmp
-    jump: ACCEPT
+  notify:
+    - Save iptable rules and make them on boot
 
 - name: Restrict INCOMING traffic
   iptables:
     chain: INPUT
     policy: DROP
-
-- name: Save iptable rules and make them on boot
-  shell: |
-    iptables-save > {{ iptable_rules }}
-    cat /etc/network/interfaces | grep "pre-up iptables-restore" || echo "pre-up iptables-restore < {{ iptable_rules }}" >> /etc/network/interfaces

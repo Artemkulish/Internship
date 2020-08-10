@@ -3,22 +3,36 @@
   apt: 
     name=nginx
     state=latest
+    update_cache=yes
 
-- name: Copy conf file
+- name: Copy Nginx conf file
+  copy:
+    src=files/nginx.conf
+    dest=/etc/nginx/nginx.conf
+  notify:
+    - Reload nginx
+
+- name: Copy {{ domain }}.{{ tld }} conf file
   template:
     src=templates/{{ domain }}.j2
     dest=/etc/nginx/sites-enabled/{{ domain }}.conf
+  notify:
+    - Reload nginx
 
 - name: Copy index html file
   copy:
     src=files/index.html
     dest=/var/www/{{ domain }}/
+  notify:
+    - Reload nginx
 
 - name: Copy auth file
   copy:
     src=files/.htpasswd
     dest=/etc/nginx/.htpasswd
-
+  notify:
+    - Reload nginx
+    
 - name: Copy SSL files
   copy:
     src=files/{{item}}
@@ -26,4 +40,4 @@
   with_items:
     ['{{ domain }}.key', '{{ domain }}.crt']
   notify:
-    - nginx systemd
+    - Reload nginx
