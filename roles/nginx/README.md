@@ -9,7 +9,7 @@ Requirements
 Role Variables
 --------------
 
-Domain and its TLD should be specified in ./var/main.yml
+Domain and its TLD should be specified in ./vars/main.yml
 
 Dependencies
 ------------
