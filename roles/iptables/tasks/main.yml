@@ -6,7 +6,7 @@
     jump: ACCEPT
   become: yes
 
-  - name: Open ports
+- name: Open ports
   iptables:
     chain: INPUT
     protocol: tcp
@@ -31,4 +31,3 @@
   shell: |
     iptables-save > {{ iptable_rules }}
     cat /etc/network/interfaces | grep "pre-up iptables-restore" || echo "pre-up iptables-restore < {{ iptable_rules }}" >> /etc/network/interfaces
-test
