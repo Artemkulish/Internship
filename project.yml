@@ -3,7 +3,10 @@
   hosts: gcp
   become: yes
 
+  pre_tasks:
+    - name: Update packages
+      shell: apt update
+
   roles:
     - nginx
     - iptables
-
