@@ -1,6 +1,6 @@
 ---
-- name: nginx systemd
+- name: Reload nginx
   systemd:
     name: nginx
     enabled: yes
-    state: restarted
+    state: reloaded

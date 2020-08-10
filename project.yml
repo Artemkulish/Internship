@@ -3,10 +3,6 @@
   hosts: stage
   become: yes
 
-  pre_tasks:
-    - name: Update packages
-      shell: apt update
-
   roles:
-    - nginx
-    - iptables
+    - { role: nginx, when: ansible_os_family == "Debian" }
+    - { role: iptables, when: ansible_system == "Linux" }
