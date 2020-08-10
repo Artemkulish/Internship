@@ -1,6 +1,6 @@
 ---
 iptable_rules: /etc/iptables.up.rules
 allowed_ports:
-    - 20
+    - 22
     - 80
     - 443
