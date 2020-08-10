@@ -1,6 +1,6 @@
 ---
 - name: Test
-  hosts: gcp
+  hosts: stage
   become: yes
 
   pre_tasks:
