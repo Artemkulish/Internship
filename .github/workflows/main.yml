@@ -13,11 +13,8 @@ jobs:
     - name: Installation
       run: sudo apt update && sudo pip install ansible-lint
     
-    - name: Clone the repo
+    - name: Checkout
       uses: actions/checkout@v1
       
     - name: Ansible-lint
-      run: |
-           ls
-           pwd
-           ansible-lint ./roles/iptables ./roles/nginx
+      run: ansible-lint -q ./roles/iptables ./roles/nginx
