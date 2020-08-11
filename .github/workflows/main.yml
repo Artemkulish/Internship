@@ -1,0 +1,14 @@
+name: Execution of ansible-lint 
+
+on:
+  push:
+    branches: [ stage ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Ansible-lint installation
+      run: apt update && pip install ansible-lint
