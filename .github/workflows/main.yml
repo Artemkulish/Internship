@@ -11,10 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Installation
-      run: sudo apt update && sudo pip install ansible-lint
+      run: |
+        sudo apt update
+        sudo pip install ansible-lint
     
     - name: Checkout
       uses: actions/checkout@v1
       
     - name: Ansible-lint
-      run: ansible-lint -q ./roles/iptables ./roles/nginx
+      run: ansible-lint ./roles/iptables ./roles/nginx
