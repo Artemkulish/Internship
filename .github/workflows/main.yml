@@ -14,7 +14,7 @@ jobs:
       run: sudo apt update && sudo pip install ansible-lint
     
     - name: Clone the repo
-      run: actions/checkout@v1
+      uses: actions/checkout@v1
       
     - name: Ansible-lint
       run: |
