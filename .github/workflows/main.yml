@@ -13,5 +13,11 @@ jobs:
     - name: Installation
       run: sudo apt update && sudo pip install ansible-lint
     
+    - name: Clone the repo
+      run: actions/checkout@v1
+      
     - name: Ansible-lint
-      run: ls && pwd
+      run: |
+           ls
+           pwd
+           ansible-lint iptables nginx
