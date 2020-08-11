@@ -14,4 +14,4 @@ jobs:
       run: sudo apt update && sudo pip install ansible-lint
     
     - name: Ansible-lint
-      run: ls
+      run: ls && pwd
