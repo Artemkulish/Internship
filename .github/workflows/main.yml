@@ -7,8 +7,11 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
-    - name: Ansible-lint installation
+    - name: Installation
       run: sudo apt update && sudo pip install ansible-lint
+    
+    - name: Ansible-lint
+      run: ansible-lint iptables nginx
