@@ -20,4 +20,4 @@ jobs:
       run: |
            ls
            pwd
-           ansible-lint iptables nginx
+           ansible-lint ./roles/iptables ./roles/nginx
