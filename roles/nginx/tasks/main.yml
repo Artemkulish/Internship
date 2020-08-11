@@ -6,38 +6,19 @@
     update_cache=yes
 
 - name: Copy Nginx conf file
-  copy:
-    src=files/nginx.conf
-    dest=/etc/nginx/nginx.conf
+  copy: src={{ item.src }} dest={{ item.dest }}
+  with_items:
+    - { src: 'files/nginx.conf',        dest: '/etc/nginx/' }
+    - { src: 'files/.htpasswd',         dest: '/etc/nginx/' }
+    - { src: 'files/index.html',        dest: '/var/www/{{ domain }}/' }
+    - { src: 'files/{{ domain }}.key',  dest: '/etc/ssl/{{ domain }}/' }
+    - { src: 'files/{{ domain }}.crt',  dest: '/etc/ssl/{{ domain }}/' }
   notify:
-    - Reload nginx
+    - reload nginx
 
 - name: Copy {{ domain }}.{{ tld }} conf file
   template:
     src=templates/{{ domain }}.j2
     dest=/etc/nginx/sites-enabled/{{ domain }}.conf
   notify:
-    - Reload nginx
-
-- name: Copy index html file
-  copy:
-    src=files/index.html
-    dest=/var/www/{{ domain }}/
-  notify:
-    - Reload nginx
-
-- name: Copy auth file
-  copy:
-    src=files/.htpasswd
-    dest=/etc/nginx/.htpasswd
-  notify:
-    - Reload nginx
-    
-- name: Copy SSL files
-  copy:
-    src=files/{{item}}
-    dest=/etc/ssl/{{ domain }}/
-  with_items:
-    ['{{ domain }}.key', '{{ domain }}.crt']
-  notify:
-    - Reload nginx
+    - reload nginx
