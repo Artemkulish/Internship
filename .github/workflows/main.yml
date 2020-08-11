@@ -11,4 +11,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Ansible-lint installation
-      run: apt update && pip install ansible-lint
+      run: sudo apt update && sudo pip install ansible-lint
