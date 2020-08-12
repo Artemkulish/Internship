@@ -1,29 +1,24 @@
 ---
 - name: Install Nginx 
   apt: 
-    name=nginx 
+    name=nginx
     state=latest
+    update_cache=yes
 
-- name: Copy conf file
-  copy:
-    src=templates/{{ domain }}.conf
-    dest=/etc/nginx/sites-enabled/{{ domain }}.conf
-
-- name: Copy index html file
-  copy:
-    src=templates/index.html
-    dest=/var/www/{{ domain }}/
-
-- name: Copy auth file
-  copy:
-    src=templates/.htpasswd
-    dest=/etc/nginx/.htpasswd
-
-- name: Copy SSL files
-  copy:
-    src=templates/{{item}}
-    dest=/etc/ssl/{{ domain }}/
+- name: Copy Nginx conf file
+  copy: src={{ item.src }} dest={{ item.dest }}
   with_items:
-    ['{{ domain }}.key', '{{ domain }}.crt']
+    - { src: 'files/nginx.conf',        dest: '/etc/nginx/' }
+    - { src: 'files/.htpasswd',         dest: '/etc/nginx/' }
+    - { src: 'files/index.html',        dest: '/var/www/{{ domain }}/' }
+    - { src: 'files/{{ domain }}.key',  dest: '/etc/ssl/{{ domain }}/' }
+    - { src: 'files/{{ domain }}.crt',  dest: '/etc/ssl/{{ domain }}/' }
   notify:
-    - nginx systemd
+    - reload nginx
+
+- name: Copy {{ domain }}.{{ tld }} conf file
+  template:
+    src=templates/{{ domain }}.j2
+    dest=/etc/nginx/sites-enabled/{{ domain }}.conf
+  notify:
+    - reload nginx
