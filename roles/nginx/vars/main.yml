@@ -1,3 +1,4 @@
 ---
 domain: svagworks
 tld: me
+nginx_user: nginx

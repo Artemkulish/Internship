@@ -1,24 +1,44 @@
 ---
 - name: Install Nginx
   apt:
-    name: nginx=1.10
+    name: nginx=nginx=1.10.3
     state: present
     update_cache: yes
 
-- name: Copy Nginx conf file
-  copy: src={{ item.src }} dest={{ item.dest }}
+- name: Create nginx user
+  user:
+    name: nginx
+    group: nginx
+    password_lock: yes
+
+- name: Copy necessary files
+  copy: src=files/{{ item.src }} dest={{ item.dest }}
   with_items:
-    - { src: 'files/nginx.conf',        dest: '/etc/nginx/' }
-    - { src: 'files/.htpasswd',         dest: '/etc/nginx/' }
-    - { src: 'files/index.html',        dest: '/var/www/{{ domain }}/' }
-    - { src: 'files/{{ domain }}.key',  dest: '/etc/ssl/{{ domain }}/' }
-    - { src: 'files/{{ domain }}.crt',  dest: '/etc/ssl/{{ domain }}/' }
+    - { src: '.htpasswd',         dest: '/etc/nginx/' }
+    - { src: 'index.html',        dest: '/var/www/{{ domain }}/' }
+    - { src: '{{ domain }}.key',  dest: '/etc/ssl/{{ domain }}/' }
+    - { src: '{{ domain }}.crt',  dest: '/etc/ssl/{{ domain }}/' }
   notify:
     - reload nginx
 
-- name: Copy {{ domain }}.{{ tld }} conf file
-  template:
-    src=templates/{{ domain }}.j2
-    dest=/etc/nginx/conf.d/{{ domain }}.conf
+- name: Copy templates
+  template: src=templates/{{ item.src }}.j2 dest={{ item.dest }}
+  with_items:
+    - { src: '{{ domain }}',    dest: '/etc/nginx/conf.d/{{ domain }}.conf' }
+    - { src: 'nginx',           dest: '/etc/nginx/nginx.conf' }
   notify:
     - reload nginx
+
+- name: Change permissions
+  file:
+    path: /etc/nginx
+    recurse: yes
+    owner: nginx
+    group: nginx
+
+- name: Change permissions
+  file:
+    path: /var/www/{{ domain }}
+    recurse: yes
+    owner: nginx
+    group: nginx    
