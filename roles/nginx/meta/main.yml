@@ -1,9 +1,12 @@
 galaxy_info:
   author: Artem Kulish
   description: role for the Nginx configuration on Debian/Ubuntu
-  company: your company (optional)
+  company: NA
 
-  license: license (GPLv2, CC-BY, etc)
+  license: NA
+
+  platforms:
+    - name: Debian/Ubuntu
 
   min_ansible_version: 1.2
 
