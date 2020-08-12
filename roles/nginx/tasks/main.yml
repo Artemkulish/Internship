@@ -1,9 +1,9 @@
 ---
-- name: Install Nginx 
-  apt: 
-    name=nginx
-    state=latest
-    update_cache=yes
+- name: Install Nginx
+  apt:
+    name: nginx=1.10.3
+    state: present
+    update_cache: yes
 
 - name: Copy Nginx conf file
   copy: src={{ item.src }} dest={{ item.dest }}
@@ -19,6 +19,6 @@
 - name: Copy {{ domain }}.{{ tld }} conf file
   template:
     src=templates/{{ domain }}.j2
-    dest=/etc/nginx/sites-enabled/{{ domain }}.conf
+    dest=/etc/nginx/conf.d/{{ domain }}.conf
   notify:
     - reload nginx
