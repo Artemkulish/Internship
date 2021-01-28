@@ -1,0 +1,27 @@
+---
+- name: Check if the worker exist
+  stat:
+    path: /opt/{{ worker_name }}
+  register: results
+
+- name: Create target directory
+  file: 
+    path: /opt/{{ worker_name }}
+    state: directory
+    mode: '0755'
+  become: yes
+  when: results.stat.islnk is not defined
+
+- name: Download the script for Azure worker
+  template:
+    src: build-agent.j2
+    dest: /opt/{{ worker_name }}/build-agent.sh
+    mode: '0755'
+  become: yes
+  when: results.stat.islnk is not defined
+
+- name: Execute the script
+  command: sudo -E /opt/{{ worker_name }}/build-agent.sh
+  environment: "{{ azure_env }}"
+  register: results
+  when: results.stat.islnk is not defined

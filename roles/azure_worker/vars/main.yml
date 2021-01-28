@@ -1,0 +1,6 @@
+azure_env:
+    AZP_AGENT_NAME: '{{ worker_name }}'
+    AZP_TOKEN: '{{ token }}'
+    AZP_URL: https://dev.azure.com/dnuffekskt-15-1-06
+    AZP_POOL: Maven
+    AZP_AGENT_VERSION: 2.173.0

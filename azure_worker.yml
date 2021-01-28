@@ -1,0 +1,6 @@
+---
+- name: Create a new Worker for Azure DevOps
+  hosts: azure_worker_1
+
+  roles:
+    - { role: azure_worker, worker_name: '{{ WORKER_NAME }}'}
