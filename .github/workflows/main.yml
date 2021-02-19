@@ -1,10 +1,6 @@
-name: Execution of ansible-lint 
+name: SQL pattern check
 
-on:
-  push:
-    branches: [ stage ]
-  pull_request:
-    branches: [ master ]
+on: push
 
 jobs:
   test:
@@ -14,4 +10,4 @@ jobs:
       uses: actions/checkout@v2
       
     - name: Pre-commit hook
-      run: ls -la
+      run: bash .githooks/pre-commit
