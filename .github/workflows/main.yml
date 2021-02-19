@@ -10,13 +10,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-    - name: Installation
-      run: |
-        sudo apt update
-        sudo pip install ansible-lint
-    
     - name: Checkout
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
       
-    - name: Ansible-lint
-      run: ansible-lint ./roles/iptables ./roles/nginx
+    - name: Pre-commit hook
+      run: ls -la
