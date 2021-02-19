@@ -29,3 +29,5 @@ if [ ! -z "$FLYWAY_FILES" ]; then
     echo ""
     exit 1
 fi
+
+echo "Testing"
