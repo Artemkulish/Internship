@@ -1,4 +1,4 @@
-name: SQL pattern check
+name: TEst
 
 on: 
   push:
