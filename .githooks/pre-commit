@@ -1,11 +1,18 @@
 #!/bin/bash
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
 IFS=$'\n'
 
-FLYWAY_MIGRATIONS_FOLDER=test/resources/db/migrations
-JAVA_MIGRATIONS_FOLDER=test/java/migrations
-FLYWAY_FILES=()
-JAVA_FILES=()
+FLYWAY_MIGRATIONS_FOLDER="test/resources/db/migrations"
+FLYWAY_MIGRATIONS_PATTERN="^.*V[0-9]{14}__.*.\.sql|^.*R_.*.\.sql"
+FLYWAY_README="https://test"
+
+JAVA_MIGRATIONS_FOLDER="test/resources/java/migrations"
+JAVA_MIGRATIONS_PATTERN="^.*V[0-9]{14}__.*.\.java|^.*R_.*.\.java"
+JAVA_README="https://test"
+
+FILES=()
 
 EXCLUDED_FILE=readme.md
 RED='\e[91m'
@@ -13,7 +20,7 @@ GREEN='\e[92m'
 NC='\033[0m' # No Color
 
 
-sql_check () {
+function sql_check () {
     for i in `find $1 -regextype posix-extended -not -regex '$2'`; do 
     if [[ $i != $1 ]]; then
         FILE=$(git status | grep $i)
@@ -34,5 +41,27 @@ sql_check () {
     fi
 }
 
-sql_check $FLYWAY_MIGRATIONS_FOLDER "^.*V[0-9]{14}__.*.\.sql|^.*R_.*.\.sql" "https://github.com/Mercato-com/mercato/blob/master/mercato/resources/db/migration/main/readme.md"
-sql_check $JAVA_MIGRATIONS_FOLDER "^.*V[0-9]{14}__.*.\.java|^.*R_.*.\.java" "https://github.com/Mercato-com/mercato/blob/master/mercato/src-core/db/migration/main/readme.md"
+function github_actions_sql_check () {
+    for i in `find $1 -regextype posix-extended -not -regex '$2'`; do 
+    if [[ $i != $1 ]]; then
+        FILES+=("$i")
+    fi
+    done
+
+    if [ ! -z "$FILES" ]; then
+        echo ""
+        echo -e "${RED}The following migration files do not match the pattern: \n${FILES[*]}${NC}"
+        echo ""
+        echo -e "${GREEN}Please make sure to stick to the naming convention: \n$3"
+        echo ""
+        exit 1
+    fi
+}
+
+if [[ $# -eq 0 ]]; then 
+    sql_check $FLYWAY_MIGRATIONS_FOLDER $FLYWAY_MIGRATIONS_PATTERN $FLYWAY_README
+    sql_check $JAVA_MIGRATIONS_FOLDER $JAVA_MIGRATIONS_PATTERN $JAVA_README
+elif [ "$1" == "github_actions_sql_check" ]; then
+    github_actions_sql_check $FLYWAY_MIGRATIONS_FOLDER $FLYWAY_MIGRATIONS_PATTERN $FLYWAY_README
+    github_actions_sql_check $JAVA_MIGRATIONS_FOLDER $JAVA_MIGRATIONS_PATTERN $JAVA_README
+fi
