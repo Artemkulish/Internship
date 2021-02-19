@@ -60,7 +60,7 @@ if [[ $# -eq 0 ]]; then
     sql_check $JAVA_MIGRATIONS_FOLDER $JAVA_MIGRATIONS_PATTERN $JAVA_README
 elif [ "$1" == "github_actions_sql_check" ]; then
     ls -la
-    ls -la test/resources/java
+    ls -la test
     github_actions_sql_check $FLYWAY_MIGRATIONS_FOLDER $FLYWAY_MIGRATIONS_PATTERN $FLYWAY_README
     github_actions_sql_check $JAVA_MIGRATIONS_FOLDER $JAVA_MIGRATIONS_PATTERN $JAVA_README
 fi
