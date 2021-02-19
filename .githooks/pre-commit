@@ -6,7 +6,7 @@ FLYWAY_MIGRATIONS_FOLDER="test/resources/db/migrations"
 FLYWAY_MIGRATIONS_PATTERN="^.*V[0-9]{14}__.*.\.sql|^.*R_.*.\.sql"
 FLYWAY_README="https://test"
 
-JAVA_MIGRATIONS_FOLDER="test/resources/db/java/migrations"
+JAVA_MIGRATIONS_FOLDER="test/resources/java/migrations"
 JAVA_MIGRATIONS_PATTERN="^.*V[0-9]{14}__.*.\.java|^.*R_.*.\.java"
 JAVA_README="https://test"
 
