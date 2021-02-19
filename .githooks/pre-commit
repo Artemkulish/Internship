@@ -19,9 +19,8 @@ RED='\e[91m'
 GREEN='\e[92m'
 NC='\033[0m' # No Color
 
-
 function sql_check () {
-    for i in `find $1 -regextype posix-extended -not -regex '$2'`; do 
+    for i in `find $1 -regextype posix-extended -not -regex "$2"| grep -v $EXCLUDED_FILE`; do 
     if [[ $i != $1 ]]; then
         FILE=$(git status | grep $i)
 
@@ -42,7 +41,7 @@ function sql_check () {
 }
 
 function github_actions_sql_check () {
-    for i in `find $1 -regextype posix-extended -not -regex '$2'`; do 
+    for i in `find $1 -regextype posix-extended -not -regex "$2"| grep -v $EXCLUDED_FILE`; do 
     if [[ $i != $1 ]]; then
         FILES+=("$i")
     fi
