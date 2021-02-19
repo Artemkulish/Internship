@@ -10,4 +10,4 @@ jobs:
       uses: actions/checkout@v2
       
     - name: Pre-commit hook
-      run: bash .githooks/pre-commit
+      run: bash .githooks/pre-commit github_actions_sql_check
