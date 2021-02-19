@@ -1,10 +1,9 @@
 #!/bin/bash
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-
 IFS=$'\n'
 
 FLYWAY_MIGRATIONS_FOLDER=test/resources/db/migrations
+JAVA_MIGRATIONS_FOLDER=test/java/migrations
 FLYWAY_FILES=()
 JAVA_FILES=()
 
@@ -13,21 +12,27 @@ RED='\e[91m'
 GREEN='\e[92m'
 NC='\033[0m' # No Color
 
-for i in `find $FLYWAY_MIGRATIONS_FOLDER -regextype posix-extended -not -regex '^.*V[0-9]{14}__.*.\.sql|^.*R_.*.\.sql'`; do 
-if [[ $i != $FLYWAY_MIGRATIONS_FOLDER ]]; then
-    FILE=$(git status | grep $i)
 
-if [ ! -z "$FILE" ]; then
-    FLYWAY_FILES+=("$FILE")
-fi
-fi
-done
+sql_check () {
+    for i in `find $1 -regextype posix-extended -not -regex '$2'`; do 
+    if [[ $i != $1 ]]; then
+        FILE=$(git status | grep $i)
 
-if [ ! -z "$FLYWAY_FILES" ]; then
-    echo ""
-    echo -e "${RED}The following Flyway migration files do not match the pattern: \n${FLYWAY_FILES[*]}${NC}"
-    echo ""
-    exit 1
-fi
+    if [ ! -z "$FILE" ]; then
+        FILES+=("$FILE")
+    fi
+    fi
+    done
 
-echo "Testing"
+    if [ ! -z "$FILES" ]; then
+        echo ""
+        echo -e "${RED}The following migration files do not match the pattern: \n${FILES[*]}${NC}"
+        echo ""
+        echo -e "${GREEN}Please make sure to stick to the naming convention: \n$3"
+        echo ""
+        exit 1
+    fi
+}
+
+sql_check $FLYWAY_MIGRATIONS_FOLDER "^.*V[0-9]{14}__.*.\.sql|^.*R_.*.\.sql" "https://github.com/Mercato-com/mercato/blob/master/mercato/resources/db/migration/main/readme.md"
+sql_check $JAVA_MIGRATIONS_FOLDER "^.*V[0-9]{14}__.*.\.java|^.*R_.*.\.java" "https://github.com/Mercato-com/mercato/blob/master/mercato/src-core/db/migration/main/readme.md"
